@@ -8,4 +8,17 @@
 - Всего есть 4 выходных нейрона - для каждого из каждого выходных классов
 ## STDP
 -
-- В момент обучения STDP нейрона, относящегося к нужному классу, изменяется на 
+- Модель:
+  
+stdp='''w : 1
+    lr1 : 1
+    lr2 : 1
+    dApre/dt = -Apre / taupre : 1 (event-driven)
+    dApost/dt = -Apost / taupost : 1 (event-driven)'''
+pre='''ge += w
+    Apre += dApre
+    w = clip(w + lr1*Apost, 0, gmax)'''
+post='''Apost += dApost
+    w = clip(w + lr2*Apre, 0, gmax)'''
+  
+- В момент обучения STDP нейрона, относящегося к нужному классу, обучение регулируется параметрами lr1, lr2 (см картинку ноушен)
