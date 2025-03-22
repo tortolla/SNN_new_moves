@@ -1,28 +1,39 @@
-#еще не доделано
+# Local, Bio-Inspired SNN (Adapted from Diehl & Cook 2015)
+The idea for this repository comes from a **ready-made article** by **Diehl & Cook (2015)**,  
+["Unsupervised learning of digit recognition using spike-timing-dependent plasticity."](https://doi.org/10.3389/fncom.2015.00099)  
+We re-implemented their **Spiking Neural Network (SNN)** in **Brian2** and adapted it to a custom dataset of moving geometric shapes.  
+
+**Author Contact:** [ivanov.fl@physicis.msu.ru](mailto:ivanov.fl@physicis.msu.ru) — Feel free to reach out for help or consultation if you want to run the code, tweak the parameters, or adapt it to your own data.
+
+---
+
+## Highlights
+1. **Local Learning (STDP):**  
+   - Synapses update based on local spike timing, emulating the human brain's biology.  
+   - This local, event-driven plasticity is more **energy-efficient** and ideal for neuromorphic hardware.
+2. **Dataset**  
+   - In our setup, we used a **large** dataset of **moving shapes** (circles, squares, triangles) with different movements.  
+   - **Due to size constraints, we cannot include it here**.  
+   - **You can load your own data** by editing file paths and parameters in the code (explained below).  
+   - Our version gets around **60%** accuracy; with tuning, you may get better results.
+3. **Brian2 Framework**  
+   - Leveraged for ease of coding spiking neurons, synapses, STDP rules, etc.
+4. **Unsupervised Approach**  
+   - No global labels or backpropagation are needed, only local spike-timing rules.  
+   - After training, you assign a class label to each neuron by observing its activity patterns.
+
+
+> **Important**: The `train/` and `test/` folders are empty because we cannot provide our large dataset.  
+> Place your own images or frames into those folders (or rename them), then change paths in `utils.py` or wherever data is loaded.
+
+---
+
+## Installation
+
+1. **Python 3.x**  
+2. **Install Brian2**  
+   ```bash
+   pip install brian2
 
 
 
-# SNN для распознования направления движения
--
-- SNN состоит из входного слоя Пуассоновских нейронов, двух скрытых слоев и одного выходного слоя
-- Все нейроны соеденены между собой с помощью STDP (см. код, там все подробно расписано)
-
-# Обучение
--
-- Всего есть 4 выходных нейрона - для каждого из каждого выходных классов
-## STDP
--
-- Модель:
-  
-stdp='''w : 1
-    lr1 : 1
-    lr2 : 1
-    dApre/dt = -Apre / taupre : 1 (event-driven)
-    dApost/dt = -Apost / taupost : 1 (event-driven)'''
-pre='''ge += w
-    Apre += dApre
-    w = clip(w + lr1*Apost, 0, gmax)'''
-post='''Apost += dApost
-    w = clip(w + lr2*Apre, 0, gmax)'''
-  
-- В момент обучения STDP нейрона, относящегося к нужному классу, обучение регулируется параметрами lr1, lr2 (см картинку ноушен)
